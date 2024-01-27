@@ -2,17 +2,22 @@
  * @param {Function} fn
  * @return {Function}
  */
-var once = function(fn) {
-    let f=0;
-    return function(...args){
-        if (f==0)
-        {
-            f=1;
-            return fn(...args);
-        }
-        else
-        {
-            return undefined;
-        }
+var once = function (fn) {
+  let hasCalled = false;
+  return function (...args) {
+    if (hasCalled) {
+      return undefined;
     }
+    hasCalled = true;
+    return fn.call(this, ...args);
+    // return fn.apply(this, args)
+  };
 };
+
+/**
+ * let fn = (a,b,c) => (a + b + c)
+ * let onceFn = once(fn)
+ *
+ * onceFn(1,2,3); // 6
+ * onceFn(2,3,6); // returns undefined without calling fn
+ */
